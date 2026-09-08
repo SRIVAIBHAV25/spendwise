@@ -1,42 +1,63 @@
-import { Home } from 'lucide-react-native';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useThemeColor } from 'heroui-native';
-import { useUniwind } from 'uniwind';
+import { CalendarDays, ChartPie, House, Settings } from 'lucide-react-native';
+import { Platform } from 'react-native';
+
+import { useAppColors, useResolvedTheme, withAlpha } from '@/lib/theme';
 
 export default function TabLayout() {
-  const { theme } = useUniwind();
-  const [background, foreground, border, accent, muted] = useThemeColor([
-    'background',
-    'foreground',
-    'border',
-    'accent',
-    'muted',
-  ]);
+  const theme = useResolvedTheme();
+  const colors = useAppColors();
 
   return (
     <>
       <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
       <Tabs
         screenOptions={{
-          headerStyle: { backgroundColor: background },
-          headerTintColor: foreground,
-          headerTitleStyle: { color: foreground },
-          headerShadowVisible: false,
-          sceneStyle: { backgroundColor: background },
+          headerShown: false,
+          sceneStyle: { backgroundColor: colors.background },
           tabBarStyle: {
-            backgroundColor: background,
-            borderTopColor: border,
+            backgroundColor: colors.surface,
+            borderTopColor: colors.separator,
+            borderTopWidth: 1,
+            elevation: 0,
+            shadowColor: withAlpha(colors.foreground, 0.12),
+            shadowOpacity: Platform.OS === 'ios' ? 0.08 : 0,
+            shadowRadius: 12,
+            height: Platform.OS === 'ios' ? 88 : 64,
+            paddingTop: 6,
           },
-          tabBarActiveTintColor: accent,
-          tabBarInactiveTintColor: muted,
+          tabBarLabelStyle: { fontSize: 11, fontWeight: '500' },
+          tabBarActiveTintColor: colors.accent,
+          tabBarInactiveTintColor: colors.muted,
         }}
       >
         <Tabs.Screen
           name="index"
           options={{
             title: 'Home',
-            tabBarIcon: ({ color, size }) => <Home color={color} size={size ?? 24} />,
+            tabBarIcon: ({ color, size }) => <House color={color} size={size ?? 24} />,
+          }}
+        />
+        <Tabs.Screen
+          name="calendar"
+          options={{
+            title: 'Calendar',
+            tabBarIcon: ({ color, size }) => <CalendarDays color={color} size={size ?? 24} />,
+          }}
+        />
+        <Tabs.Screen
+          name="reports"
+          options={{
+            title: 'Reports',
+            tabBarIcon: ({ color, size }) => <ChartPie color={color} size={size ?? 24} />,
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => <Settings color={color} size={size ?? 24} />,
           }}
         />
       </Tabs>

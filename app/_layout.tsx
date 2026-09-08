@@ -14,7 +14,6 @@ import { Platform } from 'react-native';
 import { useEffect } from 'react';
 import * as DevClient from 'expo-dev-client';
 import { HeroUINativeProvider } from 'heroui-native';
-import { Uniwind } from 'uniwind';
 import {
   ErrorBoundary as ExpoErrorBoundary,
   type ErrorBoundaryProps,
@@ -26,6 +25,9 @@ import { initPostHog } from '@/lib/posthog';
 import { registerServiceWorker } from '@/lib/registerServiceWorker';
 import { reportErrorToParent } from '@/lib/reportPreviewError';
 import { InstallPrompt } from '@/components/InstallPrompt';
+import { LockGate } from '@/components/LockGate';
+import { useTransactionsStore } from '@/lib/stores/transactions';
+import { useAppColors, useThemeSync } from '@/lib/theme';
 
 /**
  * Custom ErrorBoundary that reports React render errors to the parent window (Bilt preview iframe)
@@ -43,12 +45,17 @@ function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 
 export { ErrorBoundary };
 
-// Starter is light-only by default. Remove this when implementing requested dark mode.
-Uniwind.setTheme('light');
-
 void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useThemeSync();
+  const colors = useAppColors();
+  const initStorage = useTransactionsStore((state) => state.init);
+
+  useEffect(() => {
+    void initStorage();
+  }, [initStorage]);
+
   const [loaded, error] = useFonts({
     Inter_400Regular,
     Inter_500Medium,
@@ -141,9 +148,32 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <HeroUINativeProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ title: 'Habits', headerShown: false }} />
-        </Stack>
+        <LockGate>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: colors.background },
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen
+              name="expense/new"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen
+              name="expense/[id]"
+              options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+            />
+            <Stack.Screen name="history/index" />
+            <Stack.Screen name="history/filters" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="day/[dayKey]" />
+            <Stack.Screen name="settings/security" />
+            <Stack.Screen name="settings/budget" />
+            <Stack.Screen name="settings/categories" />
+            <Stack.Screen name="settings/export" />
+            <Stack.Screen name="settings/about" />
+          </Stack>
+        </LockGate>
         <InstallPrompt />
       </HeroUINativeProvider>
     </GestureHandlerRootView>
