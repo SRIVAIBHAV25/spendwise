@@ -27,16 +27,16 @@ export function ProgressBar({
   const value = useSharedValue(0);
 
   useEffect(() => {
-    value.value = withTiming(target, { duration: 420 });
+    value.set(withTiming(target, { duration: 420 }));
   }, [target, value]);
 
   const animatedStyle = useAnimatedStyle(() => ({
-    width: `${value.value * 100}%`,
+    width: `${value.get() * 100}%`,
   }));
 
   return (
     <View
-      className={cn('w-full overflow-hidden rounded-full bg-surface-tertiary', className)}
+      className={cn('bg-surface-tertiary w-full overflow-hidden rounded-full', className)}
       style={{ height }}
       accessible={Boolean(accessibilityLabel)}
       accessibilityLabel={accessibilityLabel}

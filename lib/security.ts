@@ -92,12 +92,8 @@ export async function getBiometricSupport(): Promise<BiometricSupport> {
       LocalAuthentication.isEnrolledAsync(),
       LocalAuthentication.supportedAuthenticationTypesAsync(),
     ]);
-    const isFace = types.includes(
-      LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION as number,
-    );
-    const isFingerprint = types.includes(
-      LocalAuthentication.AuthenticationType.FINGERPRINT as number,
-    );
+    const isFace = types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION);
+    const isFingerprint = types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT);
     let label = 'Biometrics';
     if (Platform.OS === 'ios') label = isFace ? 'Face ID' : 'Touch ID';
     else if (isFace) label = 'Face unlock';

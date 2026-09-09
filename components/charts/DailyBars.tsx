@@ -52,7 +52,12 @@ export function DailyBars({
                 className="w-full rounded-full"
                 style={{
                   height: barHeight,
-                  backgroundColor: bar.value > 0 ? (isPeak ? tint : withAlpha(tint, 0.45)) : colors.surfaceTertiary,
+                  backgroundColor:
+                    bar.value > 0
+                      ? isPeak
+                        ? tint
+                        : withAlpha(tint, 0.45)
+                      : colors.surfaceTertiary,
                 }}
               />
             </View>

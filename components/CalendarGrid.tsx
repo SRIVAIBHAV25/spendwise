@@ -49,7 +49,7 @@ export function CalendarGrid({
   );
 
   return (
-    <View className={cn('rounded-3xl border border-border bg-surface p-2', className)}>
+    <View className={cn('border-border bg-surface rounded-3xl border p-2', className)}>
       <View className="flex-row pb-1">
         {WEEKDAYS.map((weekday) => (
           <View key={weekday} style={{ width: `${100 / 7}%` }} className="items-center py-1">

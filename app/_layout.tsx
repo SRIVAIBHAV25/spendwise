@@ -26,6 +26,7 @@ import { registerServiceWorker } from '@/lib/registerServiceWorker';
 import { reportErrorToParent } from '@/lib/reportPreviewError';
 import { InstallPrompt } from '@/components/InstallPrompt';
 import { LockGate } from '@/components/LockGate';
+import { ToastHost } from '@/components/ToastHost';
 import { useTransactionsStore } from '@/lib/stores/transactions';
 import { useAppColors, useThemeSync } from '@/lib/theme';
 
@@ -174,6 +175,7 @@ export default function RootLayout() {
             <Stack.Screen name="settings/about" />
           </Stack>
         </LockGate>
+        <ToastHost />
         <InstallPrompt />
       </HeroUINativeProvider>
     </GestureHandlerRootView>

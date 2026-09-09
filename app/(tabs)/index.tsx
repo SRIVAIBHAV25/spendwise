@@ -50,7 +50,7 @@ export default function HomeScreen() {
     budgetPercent >= 100 ? colors.danger : budgetPercent >= 75 ? colors.warning : colors.accent;
 
   return (
-    <View className="flex-1 bg-background pt-safe">
+    <View className="bg-background pt-safe flex-1">
       <ScreenHeader
         title="Daily Expense"
         subtitle={monthLabel(new Date())}
@@ -60,7 +60,7 @@ export default function HomeScreen() {
             accessibilityRole="button"
             accessibilityLabel="Search transactions"
             hitSlop={8}
-            className="h-11 w-11 items-center justify-center rounded-full active:bg-surface-secondary"
+            className="active:bg-surface-secondary h-11 w-11 items-center justify-center rounded-full"
           >
             <Search color={colors.foreground} size={22} />
           </Pressable>
@@ -160,7 +160,7 @@ export default function HomeScreen() {
             onPress={() => router.push('/settings/budget')}
             accessibilityRole="button"
             accessibilityLabel={`Monthly budget ${formatCurrency(budgetAmount)}, ${formatPercent(budgetPercent)} used`}
-            className="rounded-3xl border border-border bg-surface p-4 active:bg-surface-secondary"
+            className="border-border bg-surface active:bg-surface-secondary rounded-3xl border p-4"
           >
             <View className="flex-row items-center justify-between">
               <Text type="body" weight="semibold">
@@ -196,7 +196,7 @@ export default function HomeScreen() {
           </Pressable>
         ) : null}
 
-        <View className="rounded-3xl border border-border bg-surface p-2 pt-4">
+        <View className="border-border bg-surface rounded-3xl border p-2 pt-4">
           <SectionHeader
             title="Recent transactions"
             caption={isLoading ? 'Loading…' : `${data.totalCount} recorded in total`}
@@ -206,7 +206,12 @@ export default function HomeScreen() {
           />
 
           {error ? (
-            <EmptyState icon={Receipt} title="Could not load expenses" description={error} tone="danger" />
+            <EmptyState
+              icon={Receipt}
+              title="Could not load expenses"
+              description={error}
+              tone="danger"
+            />
           ) : data.recent.length === 0 && !isLoading ? (
             <EmptyState
               icon={Receipt}
@@ -232,7 +237,7 @@ export default function HomeScreen() {
           onPress={() => router.push('/(tabs)/calendar')}
           accessibilityRole="button"
           accessibilityLabel="Open spending calendar"
-          className="flex-row items-center gap-3 rounded-3xl border border-border bg-surface p-4 active:bg-surface-secondary"
+          className="border-border bg-surface active:bg-surface-secondary flex-row items-center gap-3 rounded-3xl border p-4"
         >
           <View
             className="h-10 w-10 items-center justify-center rounded-2xl"

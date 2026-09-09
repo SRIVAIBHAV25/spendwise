@@ -30,17 +30,17 @@ interface KeyButtonProps {
 
 function KeyButton({ onPress, onLongPress, accessibilityLabel, height, children }: KeyButtonProps) {
   const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
 
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
       onPressIn={() => {
-        scale.value = withTiming(0.94, { duration: 80 });
+        scale.set(withTiming(0.94, { duration: 80 }));
       }}
       onPressOut={() => {
-        scale.value = withTiming(1, { duration: 130 });
+        scale.set(withTiming(1, { duration: 130 }));
       }}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
@@ -48,7 +48,7 @@ function KeyButton({ onPress, onLongPress, accessibilityLabel, height, children 
       style={{ minWidth: 0 }}
     >
       <AnimatedView
-        className="items-center justify-center rounded-2xl border border-border bg-surface"
+        className="border-border bg-surface items-center justify-center rounded-2xl border"
         style={[animatedStyle, { height }]}
       >
         {children}
@@ -75,11 +75,11 @@ export function Numpad({ onKeyPress, onClear, showDecimal = true, className }: N
 
   return (
     <View className={cn('w-full', className)}>
-      {rows.map((row, rowIndex) => (
-        <View key={`row-${rowIndex}`} className="flex-row">
-          {row.map((key, keyIndex) => {
+      {rows.map((row) => (
+        <View key={row.join('')} className="flex-row">
+          {row.map((key) => {
             if (!key) {
-              return <View key={`spacer-${keyIndex}`} className="flex-1 p-1" />;
+              return <View key="spacer" className="flex-1 p-1" />;
             }
 
             if (key === 'backspace') {

@@ -41,17 +41,11 @@ function TransactionRowComponent({
       onPress={onPress ? () => onPress(transaction) : undefined}
       disabled={!onPress}
       accessibilityRole={onPress ? 'button' : undefined}
-      accessibilityLabel={[
-        transaction.category,
-        transaction.note,
-        method,
-        when,
-        amount,
-      ]
+      accessibilityLabel={[transaction.category, transaction.note, method, when, amount]
         .filter(Boolean)
         .join(', ')}
       className={cn(
-        'flex-row items-center gap-3 rounded-2xl px-3 py-3 active:bg-surface-secondary',
+        'active:bg-surface-secondary flex-row items-center gap-3 rounded-2xl px-3 py-3',
         className,
       )}
     >

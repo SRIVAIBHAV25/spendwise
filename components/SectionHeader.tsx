@@ -45,7 +45,7 @@ export function SectionHeader({
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
           hitSlop={8}
-          className="min-h-11 flex-row items-center gap-0.5 justify-center"
+          className="min-h-11 flex-row items-center justify-center gap-0.5"
         >
           <Text type="body-sm" weight="medium" className="text-accent">
             {actionLabel}

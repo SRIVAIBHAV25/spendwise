@@ -50,17 +50,17 @@ export function SelectionCard({
   const scale = useSharedValue(1);
 
   useEffect(() => {
-    progress.value = withTiming(selected ? 1 : 0, { duration: DURATION });
+    progress.set(withTiming(selected ? 1 : 0, { duration: DURATION }));
   }, [selected, progress]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
-      progress.value,
+      progress.get(),
       [0, 1],
       [colors.surface, withAlpha(tint, 0.16)],
     ),
-    borderColor: interpolateColor(progress.value, [0, 1], [colors.border, tint]),
-    transform: [{ scale: scale.value }],
+    borderColor: interpolateColor(progress.get(), [0, 1], [colors.border, tint]),
+    transform: [{ scale: scale.get() }],
   }));
 
   return (
@@ -70,10 +70,10 @@ export function SelectionCard({
         onPress();
       }}
       onPressIn={() => {
-        scale.value = withTiming(0.96, { duration: 90 });
+        scale.set(withTiming(0.96, { duration: 90 }));
       }}
       onPressOut={() => {
-        scale.value = withTiming(1, { duration: 140 });
+        scale.set(withTiming(1, { duration: 140 }));
       }}
       accessibilityRole="button"
       accessibilityState={{ selected }}
@@ -89,7 +89,9 @@ export function SelectionCard({
         )}
         style={animatedStyle}
       >
-        {Icon ? <Icon color={selected ? tint : colors.muted} size={variant === 'card' ? 22 : 18} /> : null}
+        {Icon ? (
+          <Icon color={selected ? tint : colors.muted} size={variant === 'card' ? 22 : 18} />
+        ) : null}
         <Text
           type={variant === 'card' ? 'body-xs' : 'body-sm'}
           weight={selected ? 'semibold' : 'medium'}
@@ -100,7 +102,7 @@ export function SelectionCard({
           {label}
         </Text>
         {showCheck && selected ? (
-          <View className="absolute right-1.5 top-1.5">
+          <View className="absolute top-1.5 right-1.5">
             <Check color={tint} size={14} />
           </View>
         ) : null}

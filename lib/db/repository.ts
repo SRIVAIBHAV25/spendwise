@@ -24,12 +24,26 @@ const STORAGE_KEY = 'expense-tracker/transactions/v1';
 
 let cache: Transaction[] | null = null;
 
+/** Guards the persisted JSON so a corrupt entry cannot poison the cache. */
+function isTransaction(value: unknown): value is Transaction {
+  if (typeof value !== 'object' || value === null) return false;
+  const read = (key: string): unknown => Reflect.get(value, key);
+  return (
+    typeof read('id') === 'string' &&
+    typeof read('amount') === 'number' &&
+    typeof read('category') === 'string' &&
+    typeof read('paymentType') === 'string' &&
+    typeof read('transactionDate') === 'number' &&
+    typeof read('dayKey') === 'string'
+  );
+}
+
 async function load(): Promise<Transaction[]> {
   if (cache) return cache;
   try {
     const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    const parsed = raw ? (JSON.parse(raw) as Transaction[]) : [];
-    cache = Array.isArray(parsed) ? parsed : [];
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    cache = Array.isArray(parsed) ? parsed.filter(isTransaction) : [];
   } catch {
     cache = [];
   }
@@ -78,11 +92,15 @@ function sortRows(rows: Transaction[], sort: TransactionQuery['sort']): Transact
   const copy = [...rows];
   switch (sort) {
     case 'date_asc':
-      return copy.sort((a, b) => a.transactionDate - b.transactionDate || a.createdAt - b.createdAt);
+      return copy.sort(
+        (a, b) => a.transactionDate - b.transactionDate || a.createdAt - b.createdAt,
+      );
     case 'amount_desc':
       return copy.sort((a, b) => b.amount - a.amount || b.transactionDate - a.transactionDate);
     default:
-      return copy.sort((a, b) => b.transactionDate - a.transactionDate || b.createdAt - a.createdAt);
+      return copy.sort(
+        (a, b) => b.transactionDate - a.transactionDate || b.createdAt - a.createdAt,
+      );
   }
 }
 

@@ -31,14 +31,14 @@ export function ScreenHeader({
   const Icon = backIcon === 'close' ? X : ChevronLeft;
 
   return (
-    <View className={cn('flex-row items-center gap-3 px-5 pb-3 pt-1', className)}>
+    <View className={cn('flex-row items-center gap-3 px-5 pt-1 pb-3', className)}>
       {backFallback ? (
         <Pressable
           onPress={() => goBackOrReplace(backFallback)}
           accessibilityRole="button"
           accessibilityLabel={backIcon === 'close' ? 'Close' : 'Go back'}
           hitSlop={8}
-          className="h-11 w-11 -ml-2 items-center justify-center rounded-full active:bg-surface-secondary"
+          className="active:bg-surface-secondary -ml-2 h-11 w-11 items-center justify-center rounded-full"
         >
           <Icon color={colors.foreground} size={24} />
         </Pressable>

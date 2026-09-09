@@ -23,7 +23,7 @@ export function MonthSwitcher({ month, onChange, caption, className }: MonthSwit
   return (
     <View
       className={cn(
-        'flex-row items-center gap-2 rounded-2xl border border-border bg-surface p-1.5',
+        'border-border bg-surface flex-row items-center gap-2 rounded-2xl border p-1.5',
         className,
       )}
     >
@@ -35,7 +35,7 @@ export function MonthSwitcher({ month, onChange, caption, className }: MonthSwit
         accessibilityRole="button"
         accessibilityLabel="Previous month"
         hitSlop={6}
-        className="h-10 w-10 items-center justify-center rounded-xl active:bg-surface-secondary"
+        className="active:bg-surface-secondary h-10 w-10 items-center justify-center rounded-xl"
       >
         <ChevronLeft color={colors.foreground} size={20} />
       </Pressable>
@@ -48,7 +48,9 @@ export function MonthSwitcher({ month, onChange, caption, className }: MonthSwit
         }}
         disabled={isCurrent}
         accessibilityRole="button"
-        accessibilityLabel={isCurrent ? monthLabel(month) : `${monthLabel(month)}, go to this month`}
+        accessibilityLabel={
+          isCurrent ? monthLabel(month) : `${monthLabel(month)}, go to this month`
+        }
         className="flex-1 items-center justify-center py-1"
       >
         <Text type="body" weight="semibold" numberOfLines={1}>
@@ -67,7 +69,7 @@ export function MonthSwitcher({ month, onChange, caption, className }: MonthSwit
         accessibilityRole="button"
         accessibilityLabel="Next month"
         hitSlop={6}
-        className="h-10 w-10 items-center justify-center rounded-xl active:bg-surface-secondary"
+        className="active:bg-surface-secondary h-10 w-10 items-center justify-center rounded-xl"
       >
         <ChevronRight color={colors.foreground} size={20} />
       </Pressable>

@@ -16,13 +16,20 @@ interface StatCardProps {
 }
 
 /** Compact metric tile used on the dashboard and in reports. */
-export function StatCard({ label, value, caption, icon: Icon, iconColor, className }: StatCardProps) {
+export function StatCard({
+  label,
+  value,
+  caption,
+  icon: Icon,
+  iconColor,
+  className,
+}: StatCardProps) {
   const colors = useAppColors();
   const tint = iconColor ?? colors.accent;
 
   return (
     <View
-      className={cn('flex-1 rounded-3xl border border-border bg-surface p-4', className)}
+      className={cn('border-border bg-surface flex-1 rounded-3xl border p-4', className)}
       accessible
       accessibilityLabel={`${label}: ${value}${caption ? `, ${caption}` : ''}`}
     >

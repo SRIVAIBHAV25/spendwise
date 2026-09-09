@@ -8,7 +8,14 @@ import * as SQLite from 'expo-sqlite';
 
 import { toDayKey } from '@/lib/format';
 import { newId } from '@/lib/id';
-import type { PaymentType, Transaction, TransactionInput, UpiType } from '@/lib/types';
+import {
+  PAYMENT_TYPES,
+  type PaymentType,
+  type Transaction,
+  type TransactionInput,
+  UPI_TYPES,
+  type UpiType,
+} from '@/lib/types';
 
 import type {
   DailyTotal,
@@ -137,13 +144,21 @@ function orderBy(sort: TransactionQuery['sort']): string {
   }
 }
 
+function isPaymentType(value: string): value is PaymentType {
+  return (PAYMENT_TYPES as readonly string[]).includes(value);
+}
+
+function isUpiType(value: string): value is UpiType {
+  return (UPI_TYPES as readonly string[]).includes(value);
+}
+
 function toTransaction(row: Row): Transaction {
   return {
     id: row.id,
     amount: row.amount,
     category: row.category,
-    paymentType: row.paymentType as PaymentType,
-    upiType: (row.upiType as UpiType | null) ?? null,
+    paymentType: isPaymentType(row.paymentType) ? row.paymentType : 'Other',
+    upiType: row.upiType && isUpiType(row.upiType) ? row.upiType : null,
     note: row.note,
     transactionDate: row.transactionDate,
     dayKey: row.dayKey,

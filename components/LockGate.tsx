@@ -2,7 +2,12 @@ import { Button, Text } from 'heroui-native';
 import { Fingerprint, Lock, ScanFace } from 'lucide-react-native';
 import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, type AppStateStatus, View } from 'react-native';
-import { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { Numpad } from '@/components/Numpad';
 import { AnimatedView } from '@/components/ui/primitives/AnimatedView';
@@ -21,6 +26,9 @@ interface LockScreenProps {
   onUnlock: () => void;
 }
 
+/** Stable keys for the PIN placeholder dots. */
+const PIN_SLOTS = Array.from({ length: PIN_LENGTH }, (_, index) => `pin-slot-${index}`);
+
 function LockScreen({ onUnlock }: LockScreenProps) {
   const colors = useAppColors();
   const biometricEnabled = useSettingsStore((state) => state.biometricEnabled);
@@ -32,7 +40,7 @@ function LockScreen({ onUnlock }: LockScreenProps) {
   const [isFaceId, setIsFaceId] = useState(false);
 
   const shake = useSharedValue(0);
-  const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.value }] }));
+  const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.get() }] }));
 
   const runBiometrics = useCallback(async () => {
     const support = await getBiometricSupport();
@@ -72,11 +80,13 @@ function LockScreen({ onUnlock }: LockScreenProps) {
       errorFeedback();
       setError(message);
       setDigits('');
-      shake.value = withSequence(
-        withTiming(-10, { duration: 55 }),
-        withTiming(10, { duration: 55 }),
-        withTiming(-6, { duration: 55 }),
-        withTiming(0, { duration: 55 }),
+      shake.set(
+        withSequence(
+          withTiming(-10, { duration: 55 }),
+          withTiming(10, { duration: 55 }),
+          withTiming(-6, { duration: 55 }),
+          withTiming(0, { duration: 55 }),
+        ),
       );
     },
     [shake],
@@ -124,9 +134,9 @@ function LockScreen({ onUnlock }: LockScreenProps) {
   const BiometricIcon = isFaceId ? ScanFace : Fingerprint;
 
   return (
-    <View className="flex-1 bg-background px-6 pb-safe-offset-4 pt-safe-offset-6">
+    <View className="bg-background pb-safe-offset-4 pt-safe-offset-6 flex-1 px-6">
       <View className="flex-1 items-center justify-center">
-        <View className="h-16 w-16 items-center justify-center rounded-3xl bg-surface-secondary">
+        <View className="bg-surface-secondary h-16 w-16 items-center justify-center rounded-3xl">
           <Lock color={colors.accent} size={28} />
         </View>
         <Text type="h4" weight="semibold" className="mt-5">
@@ -137,11 +147,11 @@ function LockScreen({ onUnlock }: LockScreenProps) {
         </Text>
 
         <AnimatedView className="mt-8 flex-row gap-4" style={shakeStyle}>
-          {Array.from({ length: PIN_LENGTH }).map((_, index) => {
+          {PIN_SLOTS.map((slot, index) => {
             const filled = index < digits.length;
             return (
               <View
-                key={`dot-${index}`}
+                key={slot}
                 className="h-4 w-4 rounded-full border-2"
                 style={{
                   borderColor: filled ? colors.accent : colors.border,
@@ -180,16 +190,15 @@ function LockScreen({ onUnlock }: LockScreenProps) {
 export function LockGate({ children }: { children: ReactNode }) {
   const hydrated = useSettingsStore((state) => state.hydrated);
   const appLockEnabled = useSettingsStore((state) => state.appLockEnabled);
+  // Derived during render: lock exactly once, the first time settings finish
+  // hydrating, instead of reacting to it inside an effect.
+  const [wasHydrated, setWasHydrated] = useState(false);
   const [locked, setLocked] = useState(false);
-  const armed = useRef(false);
-  const wasBackgrounded = useRef(false);
-
-  // Lock once, on the first render after preferences load.
-  useEffect(() => {
-    if (!hydrated || armed.current) return;
-    armed.current = true;
+  if (hydrated && !wasHydrated) {
+    setWasHydrated(true);
     if (appLockEnabled) setLocked(true);
-  }, [hydrated, appLockEnabled]);
+  }
+  const wasBackgrounded = useRef(false);
 
   // Re-lock when the app returns from the background.
   useEffect(() => {
