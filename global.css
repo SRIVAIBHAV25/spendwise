@@ -6,84 +6,93 @@
 @import 'heroui-native/styles';
 
 /*
- * Daily Expense Tracker theme — calm teal accent, soft neutral surfaces.
+ * Daily Expense Tracker theme — monochrome.
+ *
+ * Light mode: white-dominant surfaces with black/gray content and a near-black
+ * accent. Dark mode: black-dominant surfaces with white/gray content and a
+ * near-white accent. Every neutral is pure grayscale (zero chroma).
+ *
+ * Category colors (lib/catalog.ts) stay colorful on purpose so charts, icon
+ * chips and breakdowns remain readable; only status colors (success / warning /
+ * danger) keep a tint besides that.
+ *
  * Semantic tokens are declared inside Uniwind theme variants so that native
  * (Expo Go) and web resolve the same values.
  */
 @layer theme {
   :root {
     @variant light {
-      --background: oklch(0.973 0.004 174);
-      --foreground: oklch(0.21 0.012 264);
+      --background: oklch(0.968 0 0);
+      --foreground: oklch(0.18 0 0);
 
       --surface: oklch(1 0 0);
       --surface-foreground: var(--foreground);
-      --surface-secondary: oklch(0.958 0.004 174);
+      --surface-secondary: oklch(0.95 0 0);
       --surface-secondary-foreground: var(--foreground);
-      --surface-tertiary: oklch(0.938 0.005 174);
+      --surface-tertiary: oklch(0.925 0 0);
       --surface-tertiary-foreground: var(--foreground);
 
       --overlay: oklch(1 0 0);
       --overlay-foreground: var(--foreground);
-      --backdrop: oklch(0.21 0.012 264 / 32%);
+      --backdrop: oklch(0 0 0 / 35%);
 
-      --muted: oklch(0.552 0.016 264);
-      --default: oklch(0.945 0.005 174);
+      --muted: oklch(0.56 0 0);
+      --default: oklch(0.94 0 0);
       --default-foreground: var(--foreground);
 
-      --accent: oklch(0.56 0.108 176);
-      --accent-foreground: oklch(0.99 0 0);
+      --accent: oklch(0.2 0 0);
+      --accent-foreground: oklch(1 0 0);
       --focus: var(--accent);
       --link: var(--accent);
 
-      --success: oklch(0.63 0.145 152);
-      --success-foreground: oklch(0.99 0 0);
-      --warning: oklch(0.75 0.15 68);
-      --warning-foreground: oklch(0.21 0.012 264);
-      --danger: oklch(0.6 0.196 22);
-      --danger-foreground: oklch(0.99 0 0);
+      --success: oklch(0.6 0.13 152);
+      --success-foreground: oklch(1 0 0);
+      --warning: oklch(0.72 0.13 70);
+      --warning-foreground: oklch(0.18 0 0);
+      --danger: oklch(0.58 0.19 25);
+      --danger-foreground: oklch(1 0 0);
 
-      --border: oklch(0.905 0.006 264);
-      --separator: oklch(0.88 0.006 264);
+      --border: oklch(0.905 0 0);
+      --separator: oklch(0.87 0 0);
       --field-background: oklch(1 0 0);
-      --field-border: oklch(0.905 0.006 264);
+      --field-border: oklch(0.905 0 0);
     }
 
     @variant dark {
-      --background: oklch(0.163 0.008 264);
-      --foreground: oklch(0.975 0.002 264);
+      --background: oklch(0 0 0);
+      --foreground: oklch(0.985 0 0);
 
-      --surface: oklch(0.215 0.01 264);
+      --surface: oklch(0.17 0 0);
       --surface-foreground: var(--foreground);
-      --surface-secondary: oklch(0.245 0.011 264);
+      --surface-secondary: oklch(0.215 0 0);
       --surface-secondary-foreground: var(--foreground);
-      --surface-tertiary: oklch(0.275 0.012 264);
+      --surface-tertiary: oklch(0.26 0 0);
       --surface-tertiary-foreground: var(--foreground);
 
-      --overlay: oklch(0.225 0.01 264);
+      --overlay: oklch(0.17 0 0);
       --overlay-foreground: var(--foreground);
-      --backdrop: oklch(0 0 0 / 55%);
+      --backdrop: oklch(0 0 0 / 65%);
 
-      --muted: oklch(0.705 0.015 264);
-      --default: oklch(0.268 0.011 264);
+      --muted: oklch(0.7 0 0);
+      --default: oklch(0.24 0 0);
       --default-foreground: var(--foreground);
 
-      --accent: oklch(0.72 0.115 176);
-      --accent-foreground: oklch(0.17 0.02 176);
+      --accent: oklch(0.985 0 0);
+      --accent-foreground: oklch(0.145 0 0);
       --focus: var(--accent);
       --link: var(--accent);
 
-      --success: oklch(0.74 0.15 155);
-      --success-foreground: oklch(0.17 0.01 264);
+      --success: oklch(0.75 0.15 155);
+      --success-foreground: oklch(0.145 0 0);
       --warning: oklch(0.82 0.14 76);
-      --warning-foreground: oklch(0.17 0.01 264);
-      --danger: oklch(0.65 0.19 24);
-      --danger-foreground: oklch(0.99 0 0);
+      --warning-foreground: oklch(0.145 0 0);
+      --danger: oklch(0.66 0.19 24);
+      --danger-foreground: oklch(0.145 0 0);
 
-      --border: oklch(0.288 0.011 264);
-      --separator: oklch(0.36 0.011 264);
-      --field-background: oklch(0.235 0.011 264);
-      --field-border: oklch(0.3 0.011 264);
+      --border: oklch(0.28 0 0);
+      --separator: oklch(0.34 0 0);
+      --field-background: oklch(0.19 0 0);
+      --field-border: oklch(0.3 0 0);
     }
   }
 }

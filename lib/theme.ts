@@ -25,6 +25,12 @@ export interface AppColors {
   separator: string;
   accent: string;
   accentForeground: string;
+  /** Background of the large statement cards (month total, day total). */
+  hero: string;
+  /** Content color used on top of `hero`. */
+  heroForeground: string;
+  /** Hairline used to lift `hero` off the background in dark mode. */
+  heroBorder: string;
   success: string;
   warning: string;
   danger: string;
@@ -32,32 +38,38 @@ export interface AppColors {
 
 export const PALETTES: Record<ResolvedTheme, AppColors> = {
   light: {
-    background: '#F2F6F5',
-    foreground: '#1D212A',
+    background: '#F5F5F5',
+    foreground: '#121212',
     surface: '#FFFFFF',
-    surfaceSecondary: '#EDF2F1',
-    surfaceTertiary: '#E6ECEB',
-    muted: '#6C7280',
-    border: '#DBDFE6',
-    separator: '#D2D7DF',
-    accent: '#0F9488',
+    surfaceSecondary: '#F0F0F0',
+    surfaceTertiary: '#E6E6E6',
+    muted: '#757575',
+    border: '#E1E1E1',
+    separator: '#D4D4D4',
+    accent: '#171717',
     accentForeground: '#FFFFFF',
-    success: '#17A559',
-    warning: '#E08A0C',
-    danger: '#E2413A',
+    hero: '#111111',
+    heroForeground: '#FFFFFF',
+    heroBorder: '#111111',
+    success: '#1D9A5B',
+    warning: '#C97A12',
+    danger: '#D93A32',
   },
   dark: {
-    background: '#12151B',
-    foreground: '#F7F8FA',
-    surface: '#1C1F26',
-    surfaceSecondary: '#23262E',
-    surfaceTertiary: '#292D36',
-    muted: '#9AA1AF',
-    border: '#2C3038',
-    separator: '#3B404A',
-    accent: '#2CC3AE',
-    accentForeground: '#08201C',
-    success: '#35C97C',
+    background: '#000000',
+    foreground: '#FAFAFA',
+    surface: '#0F0F0F',
+    surfaceSecondary: '#1A1A1A',
+    surfaceTertiary: '#242424',
+    muted: '#9E9E9E',
+    border: '#292929',
+    separator: '#363636',
+    accent: '#FAFAFA',
+    accentForeground: '#0A0A0A',
+    hero: '#141414',
+    heroForeground: '#FAFAFA',
+    heroBorder: '#2E2E2E',
+    success: '#3ECF8E',
     warning: '#EDA83C',
     danger: '#F1564B',
   },

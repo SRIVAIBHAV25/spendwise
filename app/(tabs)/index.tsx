@@ -73,19 +73,19 @@ export default function HomeScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View
-          className="rounded-3xl p-5"
-          style={{ backgroundColor: colors.accent }}
+          className="rounded-3xl border p-5"
+          style={{ backgroundColor: colors.hero, borderColor: colors.heroBorder }}
           accessible
           accessibilityLabel={`Total spent in ${monthLabel(new Date())}: ${formatCurrency(data.monthTotal)}`}
         >
-          <Text type="body-sm" style={{ color: withAlpha(colors.accentForeground, 0.8) }}>
+          <Text type="body-sm" style={{ color: withAlpha(colors.heroForeground, 0.72) }}>
             Total spent this month
           </Text>
           <Text
             type="h1"
             weight="bold"
             className="mt-1"
-            style={{ color: colors.accentForeground }}
+            style={{ color: colors.heroForeground }}
             numberOfLines={1}
             adjustsFontSizeToFit
           >
@@ -95,15 +95,15 @@ export default function HomeScreen() {
           <View className="mt-4 flex-row gap-3">
             <View
               className="flex-1 rounded-2xl px-3 py-2.5"
-              style={{ backgroundColor: withAlpha(colors.accentForeground, 0.16) }}
+              style={{ backgroundColor: withAlpha(colors.heroForeground, 0.12) }}
             >
-              <Text type="body-xs" style={{ color: withAlpha(colors.accentForeground, 0.85) }}>
+              <Text type="body-xs" style={{ color: withAlpha(colors.heroForeground, 0.78) }}>
                 Today
               </Text>
               <Text
                 type="body"
                 weight="semibold"
-                style={{ color: colors.accentForeground }}
+                style={{ color: colors.heroForeground }}
                 numberOfLines={1}
               >
                 {formatCurrency(data.todayTotal)}
@@ -111,15 +111,15 @@ export default function HomeScreen() {
             </View>
             <View
               className="flex-1 rounded-2xl px-3 py-2.5"
-              style={{ backgroundColor: withAlpha(colors.accentForeground, 0.16) }}
+              style={{ backgroundColor: withAlpha(colors.heroForeground, 0.12) }}
             >
-              <Text type="body-xs" style={{ color: withAlpha(colors.accentForeground, 0.85) }}>
+              <Text type="body-xs" style={{ color: withAlpha(colors.heroForeground, 0.78) }}>
                 Transactions
               </Text>
               <Text
                 type="body"
                 weight="semibold"
-                style={{ color: colors.accentForeground }}
+                style={{ color: colors.heroForeground }}
                 numberOfLines={1}
               >
                 {`${data.monthCount}`}

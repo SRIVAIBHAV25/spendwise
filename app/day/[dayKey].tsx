@@ -47,8 +47,11 @@ export default function DayScreen() {
         }
       />
 
-      <View className="mx-5 mb-3 rounded-3xl p-4" style={{ backgroundColor: colors.accent }}>
-        <Text type="body-xs" style={{ color: withAlpha(colors.accentForeground, 0.85) }}>
+      <View
+        className="mx-5 mb-3 rounded-3xl border p-4"
+        style={{ backgroundColor: colors.hero, borderColor: colors.heroBorder }}
+      >
+        <Text type="body-xs" style={{ color: withAlpha(colors.heroForeground, 0.72) }}>
           Spent on this day
         </Text>
         <Text
@@ -56,11 +59,11 @@ export default function DayScreen() {
           weight="bold"
           numberOfLines={1}
           adjustsFontSizeToFit
-          style={{ color: colors.accentForeground }}
+          style={{ color: colors.heroForeground }}
         >
           {formatCurrency(data.total)}
         </Text>
-        <Text type="body-xs" style={{ color: withAlpha(colors.accentForeground, 0.85) }}>
+        <Text type="body-xs" style={{ color: withAlpha(colors.heroForeground, 0.72) }}>
           {`${data.count} ${data.count === 1 ? 'transaction' : 'transactions'}`}
         </Text>
       </View>
