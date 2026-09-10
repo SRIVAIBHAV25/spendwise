@@ -68,6 +68,20 @@ export function CalendarGrid({
           const selected = selectedDayKey === dayKey;
           const today = isToday(day);
           const intensity = maxTotal > 0 && total > 0 ? Math.min(1, total / maxTotal) : 0;
+          /**
+           * Stepped shading keeps day text readable: the three lower steps stay
+           * light enough for normal text, the top step is solid enough that the
+           * label flips to the inverse color.
+           */
+          const level = intensity === 0 ? 0 : intensity <= 0.25 ? 1 : intensity <= 0.55 ? 2 : 3;
+          const strong = level === 3;
+          const shadeAlpha = level === 1 ? 0.12 : level === 2 ? 0.26 : 0.88;
+          const contentColor =
+            selected || strong
+              ? colors.accentForeground
+              : inMonth
+                ? colors.foreground
+                : colors.muted;
 
           return (
             <View key={dayKey} style={{ width: `${100 / 7}%` }} className="p-0.5">
@@ -83,22 +97,21 @@ export function CalendarGrid({
                 }`}
                 className={cn(
                   'min-h-[54px] items-center justify-center rounded-xl border px-0.5 py-1',
-                  selected ? 'border-transparent' : today ? 'border-accent' : 'border-transparent',
+                  today && !selected ? 'border-accent' : 'border-transparent',
                 )}
                 style={{
                   backgroundColor: selected
                     ? colors.accent
-                    : intensity > 0
-                      ? withAlpha(colors.accent, 0.1 + intensity * 0.32)
+                    : level > 0
+                      ? withAlpha(colors.accent, shadeAlpha)
                       : 'transparent',
-                  opacity: inMonth ? 1 : 0.35,
+                  opacity: inMonth ? 1 : 0.4,
                 }}
               >
                 <Text
                   type="body-sm"
-                  weight={today || selected ? 'semibold' : 'normal'}
-                  style={selected ? { color: colors.accentForeground } : undefined}
-                  className={!selected && !inMonth ? 'text-muted' : undefined}
+                  weight={today || selected || strong ? 'semibold' : 'medium'}
+                  style={{ color: contentColor }}
                 >
                   {day.getDate()}
                 </Text>
@@ -106,11 +119,8 @@ export function CalendarGrid({
                   <Text
                     type="body-xs"
                     numberOfLines={1}
-                    weight="medium"
-                    style={{
-                      fontSize: 10,
-                      color: selected ? colors.accentForeground : colors.accent,
-                    }}
+                    weight="semibold"
+                    style={{ fontSize: 10, color: contentColor }}
                   >
                     {formatCompactCurrency(total)}
                   </Text>

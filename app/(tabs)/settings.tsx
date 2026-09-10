@@ -5,10 +5,9 @@ import {
   FileSpreadsheet,
   Info,
   Lock,
-  Moon,
+  MoonStar,
   Shapes,
   SmartphoneNfc,
-  Sun,
   SunMoon,
   Trash2,
   Wallet,
@@ -18,23 +17,16 @@ import { ScrollView, View } from 'react-native';
 
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { ScreenHeader } from '@/components/ScreenHeader';
-import { SelectionCard } from '@/components/SelectionCard';
 import { SettingsCard, SettingsRow } from '@/components/SettingsRow';
 import { formatCurrency } from '@/lib/format';
 import { useSettingsStore } from '@/lib/stores/settings';
 import { showToast } from '@/lib/stores/toast';
 import { useTransactionsStore } from '@/lib/stores/transactions';
-import { useAppColors } from '@/lib/theme';
-import type { ThemeMode } from '@/lib/types';
-
-const THEME_OPTIONS: { mode: ThemeMode; label: string; icon: typeof Sun }[] = [
-  { mode: 'light', label: 'Light', icon: Sun },
-  { mode: 'dark', label: 'Dark', icon: Moon },
-  { mode: 'system', label: 'System', icon: SunMoon },
-];
+import { useAppColors, useResolvedTheme } from '@/lib/theme';
 
 export default function SettingsScreen() {
   const colors = useAppColors();
+  const resolvedTheme = useResolvedTheme();
   const themeMode = useSettingsStore((state) => state.themeMode);
   const setThemeMode = useSettingsStore((state) => state.setThemeMode);
   const appLockEnabled = useSettingsStore((state) => state.appLockEnabled);
@@ -61,23 +53,42 @@ export default function SettingsScreen() {
       <ScreenHeader title="Settings" />
 
       <ScrollView contentContainerClassName="px-5 pb-10 gap-5" showsVerticalScrollIndicator={false}>
-        <View className="gap-2">
-          <Text type="body-xs" color="muted" weight="medium" className="px-1 uppercase">
-            Appearance
-          </Text>
-          <View className="flex-row gap-2">
-            {THEME_OPTIONS.map((option) => (
-              <SelectionCard
-                key={option.mode}
-                label={option.label}
-                icon={option.icon}
-                className="flex-1"
-                selected={themeMode === option.mode}
-                onPress={() => setThemeMode(option.mode)}
-              />
-            ))}
-          </View>
-        </View>
+        <SettingsCard title="Appearance">
+          <SettingsRow
+            icon={SunMoon}
+            label="Match device"
+            description="Follow your phone's light or dark setting"
+            right={
+              <Switch
+                isSelected={themeMode === 'system'}
+                onSelectedChange={(next) => setThemeMode(next ? 'system' : resolvedTheme)}
+                accessibilityLabel="Match device appearance"
+              >
+                <Switch.Thumb />
+              </Switch>
+            }
+          />
+          <View className="bg-separator h-px" />
+          <SettingsRow
+            icon={MoonStar}
+            label="Dark mode"
+            description={
+              themeMode === 'system'
+                ? `Controlled by your device — currently ${resolvedTheme}`
+                : 'Black surfaces with white and gray content'
+            }
+            right={
+              <Switch
+                isSelected={resolvedTheme === 'dark'}
+                isDisabled={themeMode === 'system'}
+                onSelectedChange={(next) => setThemeMode(next ? 'dark' : 'light')}
+                accessibilityLabel="Dark mode"
+              >
+                <Switch.Thumb />
+              </Switch>
+            }
+          />
+        </SettingsCard>
 
         <SettingsCard title="Security">
           <SettingsRow

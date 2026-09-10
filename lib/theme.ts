@@ -4,7 +4,7 @@
  * `className` styling always goes through the Uniwind/HeroUI semantic tokens in
  * `global.css`. These hex values mirror those tokens for the places that need a
  * plain color value instead: icon props, chart fills, the tab bar, the status
- * bar and native modal backgrounds (oklch strings are not parseable there).
+ * bar and native modal backgrounds.
  */
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
@@ -38,40 +38,40 @@ export interface AppColors {
 
 export const PALETTES: Record<ResolvedTheme, AppColors> = {
   light: {
-    background: '#F5F5F5',
-    foreground: '#121212',
+    background: '#F4F4F4',
+    foreground: '#111111',
     surface: '#FFFFFF',
-    surfaceSecondary: '#F0F0F0',
-    surfaceTertiary: '#E6E6E6',
-    muted: '#757575',
-    border: '#E1E1E1',
-    separator: '#D4D4D4',
+    surfaceSecondary: '#EEEEEE',
+    surfaceTertiary: '#E3E3E3',
+    muted: '#595959',
+    border: '#DCDCDC',
+    separator: '#CFCFCF',
     accent: '#171717',
     accentForeground: '#FFFFFF',
     hero: '#111111',
     heroForeground: '#FFFFFF',
     heroBorder: '#111111',
-    success: '#1D9A5B',
-    warning: '#C97A12',
-    danger: '#D93A32',
+    success: '#1C8A4F',
+    warning: '#A76A10',
+    danger: '#C2352C',
   },
   dark: {
     background: '#000000',
     foreground: '#FAFAFA',
-    surface: '#0F0F0F',
-    surfaceSecondary: '#1A1A1A',
-    surfaceTertiary: '#242424',
-    muted: '#9E9E9E',
-    border: '#292929',
-    separator: '#363636',
+    surface: '#141414',
+    surfaceSecondary: '#1F1F1F',
+    surfaceTertiary: '#2B2B2B',
+    muted: '#B3B3B3',
+    border: '#333333',
+    separator: '#3D3D3D',
     accent: '#FAFAFA',
     accentForeground: '#0A0A0A',
-    hero: '#141414',
+    hero: '#171717',
     heroForeground: '#FAFAFA',
-    heroBorder: '#2E2E2E',
-    success: '#3ECF8E',
-    warning: '#EDA83C',
-    danger: '#F1564B',
+    heroBorder: '#333333',
+    success: '#4AC07D',
+    warning: '#E5AA48',
+    danger: '#F0655A',
   },
 };
 

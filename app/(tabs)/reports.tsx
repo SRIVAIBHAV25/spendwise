@@ -6,6 +6,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 
 import { type BreakdownItem, BreakdownList } from '@/components/BreakdownList';
+import { CalendarGrid } from '@/components/CalendarGrid';
 import { DailyBars } from '@/components/charts/DailyBars';
 import { DonutChart } from '@/components/charts/DonutChart';
 import { EmptyState } from '@/components/EmptyState';
@@ -138,6 +139,21 @@ export default function ReportsScreen() {
     });
   }, [data.daily, month]);
 
+  const dailyTotals = useMemo(() => {
+    const result: Record<string, number> = {};
+    for (const day of data.daily) result[day.dayKey] = day.total;
+    return result;
+  }, [data.daily]);
+
+  const maxDayTotal = useMemo(
+    () => data.daily.reduce((max, day) => Math.max(max, day.total), 0),
+    [data.daily],
+  );
+
+  const openDay = useCallback((dayKey: string) => {
+    router.push({ pathname: '/day/[dayKey]', params: { dayKey } });
+  }, []);
+
   const topCategory = data.categories[0] ?? null;
   const topPayment = useMemo(
     () =>
@@ -206,6 +222,20 @@ export default function ReportsScreen() {
             <View className="border-border bg-surface rounded-3xl border p-4">
               <SectionHeader title="Daily spending" caption="Every day of the selected month" />
               <DailyBars data={dailyBars} className="mt-4" />
+            </View>
+
+            <View className="gap-2">
+              <SectionHeader
+                title="Month calendar"
+                caption="Tap any day to open its expenses"
+                className="px-1"
+              />
+              <CalendarGrid
+                month={month}
+                totals={dailyTotals}
+                maxTotal={maxDayTotal}
+                onSelectDay={openDay}
+              />
             </View>
 
             <View className="border-border bg-surface rounded-3xl border p-4">
