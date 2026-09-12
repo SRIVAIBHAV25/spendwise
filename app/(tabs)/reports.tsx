@@ -188,9 +188,7 @@ export default function ReportsScreen() {
           <EmptyState
             icon={ChartPie}
             title="No data for this month"
-            description="Add an expense or pick another month to see your breakdowns."
-            actionLabel="Add Expense"
-            onAction={() => router.push('/expense/new')}
+            description="Tap the round + button below or pick another month to see your breakdowns."
           />
         ) : (
           <>

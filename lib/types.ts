@@ -42,7 +42,7 @@ export interface Category {
   isDefault?: boolean;
 }
 
-export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeMode = 'light' | 'dark';
 
 export type BudgetThreshold = 75 | 90 | 100;
 

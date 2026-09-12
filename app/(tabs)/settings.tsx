@@ -8,7 +8,6 @@ import {
   MoonStar,
   Shapes,
   SmartphoneNfc,
-  SunMoon,
   Trash2,
   Wallet,
 } from 'lucide-react-native';
@@ -27,7 +26,6 @@ import { useAppColors, useResolvedTheme } from '@/lib/theme';
 export default function SettingsScreen() {
   const colors = useAppColors();
   const resolvedTheme = useResolvedTheme();
-  const themeMode = useSettingsStore((state) => state.themeMode);
   const setThemeMode = useSettingsStore((state) => state.setThemeMode);
   const appLockEnabled = useSettingsStore((state) => state.appLockEnabled);
   const budgetEnabled = useSettingsStore((state) => state.budgetEnabled);
@@ -55,32 +53,16 @@ export default function SettingsScreen() {
       <ScrollView contentContainerClassName="px-5 pb-10 gap-5" showsVerticalScrollIndicator={false}>
         <SettingsCard title="Appearance">
           <SettingsRow
-            icon={SunMoon}
-            label="Match device"
-            description="Follow your phone's light or dark setting"
-            right={
-              <Switch
-                isSelected={themeMode === 'system'}
-                onSelectedChange={(next) => setThemeMode(next ? 'system' : resolvedTheme)}
-                accessibilityLabel="Match device appearance"
-              >
-                <Switch.Thumb />
-              </Switch>
-            }
-          />
-          <View className="bg-separator h-px" />
-          <SettingsRow
             icon={MoonStar}
             label="Dark mode"
             description={
-              themeMode === 'system'
-                ? `Controlled by your device — currently ${resolvedTheme}`
-                : 'Black surfaces with white and gray content'
+              resolvedTheme === 'dark'
+                ? 'Black surfaces with white and gray content'
+                : 'White surfaces with black and gray content'
             }
             right={
               <Switch
                 isSelected={resolvedTheme === 'dark'}
-                isDisabled={themeMode === 'system'}
                 onSelectedChange={(next) => setThemeMode(next ? 'dark' : 'light')}
                 accessibilityLabel="Dark mode"
               >

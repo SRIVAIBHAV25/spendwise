@@ -7,7 +7,6 @@
  * bar and native modal backgrounds.
  */
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
 import { Uniwind } from 'uniwind';
 
 import { useSettingsStore } from '@/lib/stores/settings';
@@ -75,12 +74,10 @@ export const PALETTES: Record<ResolvedTheme, AppColors> = {
   },
 };
 
-/** The theme actually on screen, honouring the "System" appearance option. */
+/** The theme actually on screen. Appearance is an explicit light/dark choice. */
 export function useResolvedTheme(): ResolvedTheme {
-  const scheme = useColorScheme();
   const themeMode = useSettingsStore((state) => state.themeMode);
-  if (themeMode === 'system') return scheme === 'dark' ? 'dark' : 'light';
-  return themeMode;
+  return themeMode === 'dark' ? 'dark' : 'light';
 }
 
 export function useAppColors(): AppColors {

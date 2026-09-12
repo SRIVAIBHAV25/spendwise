@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
-import { Button, Text } from 'heroui-native';
-import { CalendarClock, Plus, Receipt, Search, TrendingUp, Wallet } from 'lucide-react-native';
+import { Text } from 'heroui-native';
+import { CalendarClock, Receipt, Search, TrendingUp, Wallet } from 'lucide-react-native';
 import { useCallback } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 
@@ -128,16 +128,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <Button
-          size="lg"
-          className="h-14 rounded-2xl"
-          onPress={() => router.push('/expense/new')}
-          accessibilityLabel="Add expense"
-        >
-          <Plus color={colors.accentForeground} size={20} />
-          <Button.Label>Add Expense</Button.Label>
-        </Button>
-
         <View className="flex-row gap-3">
           <StatCard
             label="Today"
@@ -216,9 +206,7 @@ export default function HomeScreen() {
             <EmptyState
               icon={Receipt}
               title="No expenses yet"
-              description="Start tracking your spending by adding your first expense."
-              actionLabel="Add Expense"
-              onAction={() => router.push('/expense/new')}
+              description="Tap the round + button below to record your first expense."
             />
           ) : (
             <View className="pt-1">

@@ -1,10 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input, Label, Text, TextField } from 'heroui-native';
-import { CalendarClock, Check, Trash2 } from 'lucide-react-native';
+import { CalendarClock, Check, Delete, Trash2 } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, View } from 'react-native';
-import { FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  ScrollView,
+  useWindowDimensions,
+  View,
+} from 'react-native';
+import {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  FadeOutUp,
+  SlideInDown,
+  SlideOutDown,
+} from 'react-native-reanimated';
 import { z } from 'zod';
 
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -17,7 +32,7 @@ import { applyAmountKey, amountToRaw } from '@/lib/amount';
 import { getCategoryIcon, PAYMENT_META, UPI_META } from '@/lib/catalog';
 import { toUserMessage } from '@/lib/errors';
 import { formatAmountInput, formatDateTime, parseAmountInput, RUPEE } from '@/lib/format';
-import { errorFeedback, successFeedback } from '@/lib/haptics';
+import { errorFeedback, successFeedback, tapFeedback } from '@/lib/haptics';
 import { goBackOrReplace } from '@/lib/navigation';
 import { useSettingsStore } from '@/lib/stores/settings';
 import { showToast } from '@/lib/stores/toast';
@@ -31,7 +46,6 @@ import {
   type UpiType,
 } from '@/lib/types';
 
-const QUICK_AMOUNTS = [50, 100, 200, 500];
 const MAX_AMOUNT = 99_999_999;
 
 const schema = z
@@ -81,8 +95,14 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isDateOpen, setIsDateOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  /** The keypad stays hidden until the amount is tapped. */
+  const [isNumpadOpen, setIsNumpadOpen] = useState(false);
   /** Captured once so re-renders never move a new expense's timestamp. */
   const [defaultDate] = useState(() => transaction?.transactionDate ?? Date.now());
+  const { width } = useWindowDimensions();
+  /** Wider phones and tablets fit a fourth column of category tiles. */
+  const categoryColumnWidth = width >= 480 ? '25%' : '33.3333%';
+  const paymentColumnWidth = width >= 480 ? '33.3333%' : '50%';
 
   const {
     control,
@@ -156,6 +176,12 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
     }
   };
 
+  const openNumpad = useCallback(() => {
+    Keyboard.dismiss();
+    setIsNumpadOpen(true);
+    tapFeedback();
+  }, []);
+
   const amountError = errors.amountRaw?.message;
 
   return (
@@ -164,19 +190,23 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerClassName="px-5 pb-6 gap-5"
+        contentContainerClassName="px-5 gap-5"
+        contentContainerStyle={{ paddingBottom: isNumpadOpen ? 340 : 24 }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
       >
-        <View className="border-border bg-surface items-center rounded-3xl border px-4 py-5">
+        <Pressable
+          onPress={openNumpad}
+          accessibilityRole="button"
+          accessibilityLabel={`Amount ${RUPEE}${formatAmountInput(amountRaw)}. Tap to open the keypad.`}
+          className="border-border bg-surface active:bg-surface-secondary items-center rounded-3xl border px-4 py-5"
+          style={{ borderColor: isNumpadOpen ? colors.accent : colors.border }}
+        >
           <Text type="body-xs" color="muted">
             Amount
           </Text>
-          <View
-            className="mt-1 flex-row items-baseline"
-            accessible
-            accessibilityLabel={`Amount ${RUPEE}${formatAmountInput(amountRaw)}`}
-          >
+          <View className="mt-1 flex-row items-baseline">
             <Text type="h3" weight="semibold" style={{ color: colors.muted }}>
               {RUPEE}
             </Text>
@@ -196,29 +226,11 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
               {amountError}
             </Text>
           ) : (
-            <Text type="body-xs" color="muted" className="mt-1.5">
-              Hold the delete key to clear
+            <Text type="body-xs" className="mt-1.5" style={{ color: colors.accent }}>
+              {isNumpadOpen ? 'Use the keypad below' : 'Tap to enter the amount'}
             </Text>
           )}
-
-          <View className="mt-4 w-full flex-row gap-2">
-            {QUICK_AMOUNTS.map((quick) => (
-              <SelectionCard
-                key={quick}
-                label={`${RUPEE}${quick}`}
-                variant="chip"
-                className="flex-1"
-                selected={parseAmountInput(amountRaw) === quick}
-                onPress={() => setValue('amountRaw', `${quick}`, { shouldValidate: false })}
-              />
-            ))}
-          </View>
-        </View>
-
-        <Numpad
-          onKeyPress={onKeyPress}
-          onClear={() => setValue('amountRaw', '', { shouldValidate: false })}
-        />
+        </Pressable>
 
         <View>
           <SectionHeader title="Category" className="px-0 pb-2" />
@@ -229,7 +241,7 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
           ) : null}
           <View className="-mx-1 flex-row flex-wrap">
             {categories.map((category) => (
-              <View key={category.id} style={{ width: '33.3333%' }} className="p-1">
+              <View key={category.id} style={{ width: categoryColumnWidth }} className="p-1">
                 <SelectionCard
                   label={category.name}
                   icon={getCategoryIcon(category.icon)}
@@ -246,7 +258,7 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
           <SectionHeader title="Payment type" className="px-0 pb-2" />
           <View className="-mx-1 flex-row flex-wrap">
             {PAYMENT_TYPES.map((type: PaymentType) => (
-              <View key={type} style={{ width: '50%' }} className="p-1">
+              <View key={type} style={{ width: paymentColumnWidth }} className="p-1">
                 <SelectionCard
                   label={type}
                   variant="chip"
@@ -322,6 +334,7 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
                 value={field.value}
                 onChangeText={field.onChange}
                 onBlur={field.onBlur}
+                onFocus={() => setIsNumpadOpen(false)}
                 placeholder="Breakfast, bus fare, stationery…"
                 returnKeyType="done"
                 maxLength={120}
@@ -377,6 +390,71 @@ export function ExpenseForm({ transaction }: ExpenseFormProps) {
           <Button.Label>{isEditing ? 'Update expense' : 'Save expense'}</Button.Label>
         </Button>
       </View>
+
+      {isNumpadOpen ? (
+        <>
+          <AnimatedView
+            entering={FadeIn.duration(160)}
+            exiting={FadeOut.duration(140)}
+            className="absolute inset-0"
+            style={{ backgroundColor: withAlpha(colors.foreground, 0.18) }}
+          >
+            <Pressable
+              className="flex-1"
+              accessibilityRole="button"
+              accessibilityLabel="Close keypad"
+              onPress={() => setIsNumpadOpen(false)}
+            />
+          </AnimatedView>
+
+          <AnimatedView
+            entering={SlideInDown.duration(240)}
+            exiting={SlideOutDown.duration(180)}
+            className="border-border pb-safe-offset-3 absolute inset-x-0 bottom-0 rounded-t-3xl border-t px-4 pt-3"
+            style={{ backgroundColor: colors.surface }}
+          >
+            <View className="mb-2 flex-row items-center justify-between px-1">
+              <View className="flex-row items-baseline">
+                <Text type="body-sm" weight="medium" style={{ color: colors.muted }}>
+                  {RUPEE}
+                </Text>
+                <Text type="h4" weight="bold" className="ml-1" numberOfLines={1}>
+                  {formatAmountInput(amountRaw)}
+                </Text>
+              </View>
+              <View className="flex-row items-center gap-2">
+                <Pressable
+                  onPress={() => {
+                    tapFeedback();
+                    setValue('amountRaw', '', { shouldValidate: false });
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear amount"
+                  hitSlop={8}
+                  className="border-border active:bg-surface-secondary min-h-9 flex-row items-center gap-1.5 rounded-full border px-3"
+                >
+                  <Delete color={colors.muted} size={15} />
+                  <Text type="body-sm" weight="medium" style={{ color: colors.muted }}>
+                    Clear
+                  </Text>
+                </Pressable>
+                <Button
+                  size="sm"
+                  className="h-9 rounded-full"
+                  onPress={() => setIsNumpadOpen(false)}
+                >
+                  <Button.Label>Done</Button.Label>
+                </Button>
+              </View>
+            </View>
+
+            <Numpad
+              onKeyPress={onKeyPress}
+              onClear={() => setValue('amountRaw', '', { shouldValidate: false })}
+            />
+          </AnimatedView>
+        </>
+      ) : null}
 
       <DateTimeDialog
         isOpen={isDateOpen}

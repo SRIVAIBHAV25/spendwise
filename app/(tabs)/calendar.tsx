@@ -102,9 +102,7 @@ export default function CalendarScreen() {
               <EmptyState
                 icon={CalendarDays}
                 title="Nothing recorded this month"
-                description="Add an expense or switch to another month to see your spending."
-                actionLabel="Add Expense"
-                onAction={() => router.push('/expense/new')}
+                description="Tap the round + button below or switch to another month to see your spending."
               />
             ) : null}
           </>

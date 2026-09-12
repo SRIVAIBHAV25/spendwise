@@ -35,11 +35,15 @@ interface SettingsState {
   markHydrated: () => void;
 }
 
+function isPartialSettingsState(value: unknown): value is Partial<SettingsState> {
+  return typeof value === 'object' && value !== null;
+}
+
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set) => ({
       hydrated: false,
-      themeMode: 'system',
+      themeMode: 'light',
       categories: DEFAULT_CATEGORIES,
       budgetEnabled: false,
       budgetAmount: 15000,
@@ -84,6 +88,13 @@ export const useSettingsStore = create<SettingsState>()(
       name: 'expense-tracker/settings/v1',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: ({ hydrated: _hydrated, ...rest }) => rest,
+      version: 2,
+      // v1 stored a 'system' appearance option; appearance is now light/dark only.
+      migrate: (persisted) => {
+        if (!isPartialSettingsState(persisted)) return persisted;
+        if (persisted.themeMode !== 'dark') return { ...persisted, themeMode: 'light' };
+        return persisted;
+      },
       // Runs once persisted preferences are merged, so gates do not flash.
       onRehydrateStorage: () => (state) => {
         state?.markHydrated();

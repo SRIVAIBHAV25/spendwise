@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { CalendarDays, ChartPie, House, Settings } from 'lucide-react-native';
 import { Platform } from 'react-native';
 
+import { AddExpenseFab } from '@/components/AddExpenseFab';
 import { useAppColors, useResolvedTheme, withAlpha } from '@/lib/theme';
 
 export default function TabLayout() {
@@ -24,9 +25,11 @@ export default function TabLayout() {
             shadowColor: withAlpha(colors.foreground, 0.12),
             shadowOpacity: Platform.OS === 'ios' ? 0.08 : 0,
             shadowRadius: 12,
-            height: Platform.OS === 'ios' ? 88 : 64,
-            paddingTop: 6,
+            height: Platform.OS === 'ios' ? 90 : 68,
+            paddingTop: 8,
+            overflow: 'visible',
           },
+          tabBarItemStyle: { overflow: 'visible' },
           tabBarLabelStyle: { fontSize: 11, fontWeight: '500' },
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.muted,
@@ -44,6 +47,13 @@ export default function TabLayout() {
           options={{
             title: 'Calendar',
             tabBarIcon: ({ color, size }) => <CalendarDays color={color} size={size ?? 24} />,
+          }}
+        />
+        <Tabs.Screen
+          name="add"
+          options={{
+            title: 'Add',
+            tabBarButton: () => <AddExpenseFab />,
           }}
         />
         <Tabs.Screen
