@@ -10,7 +10,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/inter';
 import Constants, { ExecutionEnvironment } from 'expo-constants';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { useEffect } from 'react';
 import * as DevClient from 'expo-dev-client';
 import { HeroUINativeProvider } from 'heroui-native';
@@ -52,7 +52,6 @@ export default function RootLayout() {
   useThemeSync();
   const colors = useAppColors();
   const initStorage = useTransactionsStore((state) => state.init);
-  console.log('Spendwise root layout', Platform.OS);
 
   useEffect(() => {
     void initStorage();
@@ -153,12 +152,16 @@ export default function RootLayout() {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <HeroUINativeProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.background },
-            }}
-          />
+          <View style={{ flex: 1 }}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.background },
+              }}
+            >
+              <Stack.Screen name="index" />
+            </Stack>
+          </View>
         </HeroUINativeProvider>
       </GestureHandlerRootView>
     );

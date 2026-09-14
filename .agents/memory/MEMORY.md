@@ -1,0 +1,1 @@
+- [Expo web preview routing](expo-web-preview.md) — direct root web routes can avoid zero-height tab shells while preserving native tab navigation.
