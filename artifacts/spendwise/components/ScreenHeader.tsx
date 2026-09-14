@@ -2,7 +2,7 @@ import { type Href } from 'expo-router';
 import { Text } from 'heroui-native';
 import { ChevronLeft, X } from 'lucide-react-native';
 import type { ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { Platform, Pressable, View } from 'react-native';
 
 import { goBackOrReplace } from '@/lib/navigation';
 import { useAppColors } from '@/lib/theme';
@@ -31,7 +31,10 @@ export function ScreenHeader({
   const Icon = backIcon === 'close' ? X : ChevronLeft;
 
   return (
-    <View className={cn('flex-row items-center gap-3 px-5 pt-1 pb-3', className)}>
+    <View
+      className={cn('flex-row items-center gap-3 px-5 pt-1 pb-3', className)}
+      style={Platform.OS === 'web' ? { paddingTop: 67 } : undefined}
+    >
       {backFallback ? (
         <Pressable
           onPress={() => goBackOrReplace(backFallback)}

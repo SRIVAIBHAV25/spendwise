@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { Text } from 'heroui-native';
 import { CalendarClock, Receipt, Search, TrendingUp, Wallet } from 'lucide-react-native';
 import { useCallback } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Platform, Pressable, ScrollView, View } from 'react-native';
 
 import { EmptyState } from '@/components/EmptyState';
 import { ProgressBar } from '@/components/ProgressBar';
@@ -69,6 +69,7 @@ export default function HomeScreen() {
 
       <ScrollView
         contentContainerClassName="px-5 pb-10 gap-4"
+        contentContainerStyle={Platform.OS === 'web' ? { paddingBottom: 84 } : undefined}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >

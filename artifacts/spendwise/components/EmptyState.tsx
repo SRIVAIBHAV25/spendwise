@@ -30,14 +30,14 @@ export function EmptyState({
   const tint = tone === 'danger' ? colors.danger : colors.accent;
 
   return (
-    <View className={cn('items-center justify-center px-8 py-10', className)}>
+    <View className={cn('items-center justify-center px-8 py-7', className)}>
       <View
-        className="h-16 w-16 items-center justify-center rounded-3xl"
+        className="h-14 w-14 items-center justify-center rounded-2xl"
         style={{ backgroundColor: withAlpha(tint, 0.14) }}
       >
-        <Icon color={tint} size={28} />
+        <Icon color={tint} size={24} />
       </View>
-      <Text type="body" weight="semibold" align="center" className="mt-4">
+      <Text type="body" weight="semibold" align="center" className="mt-3">
         {title}
       </Text>
       {description ? (
