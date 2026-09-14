@@ -159,7 +159,7 @@ export default function RootLayout() {
                 contentStyle: { backgroundColor: colors.background },
               }}
             >
-              <Stack.Screen name="index" />
+              <Stack.Screen name="(tabs)" />
             </Stack>
           </View>
         </HeroUINativeProvider>
