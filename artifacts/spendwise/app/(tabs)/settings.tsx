@@ -12,7 +12,7 @@ import {
   Wallet,
 } from 'lucide-react-native';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Platform, ScrollView, View } from 'react-native';
 
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { ScreenHeader } from '@/components/ScreenHeader';
@@ -50,7 +50,11 @@ export default function SettingsScreen() {
     <View className="bg-background pt-safe flex-1">
       <ScreenHeader title="Settings" />
 
-      <ScrollView contentContainerClassName="px-5 pb-10 gap-5" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerClassName="px-5 pb-10 gap-5"
+        contentContainerStyle={Platform.OS === 'web' ? { paddingBottom: 84 } : undefined}
+        showsVerticalScrollIndicator={false}
+      >
         <SettingsCard title="Appearance">
           <SettingsRow
             icon={MoonStar}

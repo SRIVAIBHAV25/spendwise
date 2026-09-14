@@ -1,1 +1,2 @@
 - [Expo web preview routing](expo-web-preview.md) — tab navigators need an explicit full-height wrapper in the managed web preview.
+- [Expo Go worklet colors](expo-go-worklet-colors.md) — calculate derived colors before entering Reanimated worklets; UI runtime cannot call regular JS helpers.

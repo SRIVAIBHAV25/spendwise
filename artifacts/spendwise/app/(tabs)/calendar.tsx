@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { Text } from 'heroui-native';
 import { CalendarDays } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Platform, ScrollView, View } from 'react-native';
 
 import { CalendarGrid } from '@/components/CalendarGrid';
 import { EmptyState } from '@/components/EmptyState';
@@ -47,7 +47,11 @@ export default function CalendarScreen() {
     <View className="bg-background pt-safe flex-1">
       <ScreenHeader title="Calendar" subtitle="Tap a day to see its expenses" />
 
-      <ScrollView contentContainerClassName="px-5 pb-10 gap-4" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerClassName="px-5 pb-10 gap-4"
+        contentContainerStyle={Platform.OS === 'web' ? { paddingBottom: 84 } : undefined}
+        showsVerticalScrollIndicator={false}
+      >
         <MonthSwitcher
           month={month}
           onChange={setMonth}

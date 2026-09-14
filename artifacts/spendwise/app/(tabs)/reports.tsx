@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { Text } from 'heroui-native';
 import { Award, CalendarRange, ChartPie, Receipt, TrendingUp } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { Platform, ScrollView, View } from 'react-native';
 
 import { type BreakdownItem, BreakdownList } from '@/components/BreakdownList';
 import { CalendarGrid } from '@/components/CalendarGrid';
@@ -170,7 +170,11 @@ export default function ReportsScreen() {
     <View className="bg-background pt-safe flex-1">
       <ScreenHeader title="Reports" subtitle="Where your money went" />
 
-      <ScrollView contentContainerClassName="px-5 pb-10 gap-4" showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerClassName="px-5 pb-10 gap-4"
+        contentContainerStyle={Platform.OS === 'web' ? { paddingBottom: 84 } : undefined}
+        showsVerticalScrollIndicator={false}
+      >
         <MonthSwitcher
           month={month}
           onChange={setMonth}

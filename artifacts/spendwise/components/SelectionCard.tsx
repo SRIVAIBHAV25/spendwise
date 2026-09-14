@@ -45,6 +45,9 @@ export function SelectionCard({
 }: SelectionCardProps) {
   const colors = useAppColors();
   const tint = color ?? colors.accent;
+  const selectedSurface = withAlpha(tint, 0.16);
+  const surfaceColor = colors.surface;
+  const borderColor = colors.border;
 
   const progress = useSharedValue(selected ? 1 : 0);
   const scale = useSharedValue(1);
@@ -57,9 +60,9 @@ export function SelectionCard({
     backgroundColor: interpolateColor(
       progress.get(),
       [0, 1],
-      [colors.surface, withAlpha(tint, 0.16)],
+      [surfaceColor, selectedSurface],
     ),
-    borderColor: interpolateColor(progress.get(), [0, 1], [colors.border, tint]),
+    borderColor: interpolateColor(progress.get(), [0, 1], [borderColor, tint]),
     transform: [{ scale: scale.get() }],
   }));
 
